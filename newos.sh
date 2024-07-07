@@ -35,7 +35,7 @@ echo -e "\n# Initialize Oh My Posh\neval \"\$(oh-my-posh init bash --config ~/po
 
 # Download the theme for root
 sudo mkdir -p /root/poshthemes
-sudo wget https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/hellokitty.omp.json -O /root/poshthemes/hellokitty.omp.json
+sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/themes/jv_sitecorian.omp.json -O /root/poshthemes/hellokitty.omp.json
 
 # Install Fastfetch
 git clone https://github.com/LinusDierheimer/fastfetch.git /tmp/fastfetch
