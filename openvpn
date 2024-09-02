@@ -1,0 +1,80 @@
+OpenVPN Server Configuration (/etc/openvpn/server.conf)
+ini
+Code kopieren
+port 1194
+proto udp
+dev tun
+ca /etc/openvpn/ca.crt
+cert /etc/openvpn/server.crt
+key /etc/openvpn/server.key
+dh /etc/openvpn/dh.pem
+server 192.168.10.0 255.255.255.0
+ifconfig-pool-persist /etc/openvpn/ipp.txt
+push "route 10.100.100.0 255.255.255.0"
+push "route 10.200.200.0 255.255.255.0"
+push "redirect-gateway def1 bypass-dhcp"
+; client-to-client -- Commented out to prevent client-to-client communication
+keepalive 10 120
+cipher AES-256-CBC
+auth SHA256
+comp-lzo
+persist-key
+persist-tun
+status /var/log/openvpn-status.log
+verb 3
+CCD Configuration Files
+Create the CCD directory (if it doesn’t exist):
+
+bash
+Code kopieren
+sudo mkdir -p /etc/openvpn/ccd
+For Remote Site 1 (client1)
+Create /etc/openvpn/ccd/client1:
+
+ini
+Code kopieren
+iroute 10.100.100.0 255.255.255.0
+For Remote Site 2 (client2)
+Create /etc/openvpn/ccd/client2:
+
+ini
+Code kopieren
+iroute 10.200.200.0 255.255.255.0
+System Configuration Commands
+Enable IP Forwarding
+
+Temporarily (until next reboot):
+
+bash
+Code kopieren
+sudo sysctl -w net.ipv4.ip_forward=1
+Permanently (for future reboots):
+
+bash
+Code kopieren
+sudo sh -c 'echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf'
+sudo sysctl -p
+Restart OpenVPN Service
+
+To apply changes:
+
+bash
+Code kopieren
+sudo systemctl restart openvpn@server
+Check OpenVPN Status
+
+To ensure that the server is running properly:
+
+bash
+Code kopieren
+sudo systemctl status openvpn@server
+Network and Routing Configuration
+Configure Main Site Router
+
+Ensure that the router (192.168.10.1) can route traffic between the subnets 10.100.100.0/24 and 10.200.200.0/24. This might require adding static routes on the router if it is not automatically handling this traffic.
+
+Summary
+/etc/openvpn/server.conf: OpenVPN server configuration file with no client-to-client directive.
+CCD Files: Define routes for specific remote clients.
+System Commands: Enable IP forwarding on the OpenVPN server.
+Router Configuration: Ensure proper routing between remote subnets through the main site's router.
